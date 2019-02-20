@@ -1,7 +1,8 @@
-pyth - Python text markup and conversion
-========================================
+pyth3 - Python text markup and conversion
+=========================================
 
 Pyth is intended to make it easy to convert marked-up text between different common formats.
+This is a (rather incomplete so far) port of pyth 0.6.0 to Python 3.
 
 *Marked-up text* means text which has:
 
@@ -36,7 +37,7 @@ Design principles/goals
 Examples
 ========
 
-See http://github.com/brendonh/pyth/tree/master/examples/
+See directory `examples`.
 
 
 

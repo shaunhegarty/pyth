@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from setuptools import setup, find_packages
 
-setup(name="pyth",
+setup(name="pyth3",
       version="0.7",
       packages = find_packages(),
       zip_safe = False,
@@ -11,6 +11,7 @@ setup(name="pyth",
       author_email="brendonh@gmail.com",
       url="http://github.com/prechelt/pyth",
       long_description=open('README.md').read(),
+      long_description_content_type="text/markdown",
 
       classifiers = [
         "Development Status :: 5 - Production/Stable",
