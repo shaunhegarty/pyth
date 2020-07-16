@@ -632,7 +632,7 @@ class Group(object):
     def handle_up(self, amount):
         self.content.append(ReadableMarker("super", True))
 
-    def handle_super(self, amount):
+    def handle_super(self):
         self.content.append(ReadableMarker("super", True))
 
     #Turns off superscripting or subscripting
