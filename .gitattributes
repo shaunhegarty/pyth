@@ -1,1 +1,3 @@
 *.rtf eol=crlf
+* linguist-vendored
+*.py linguist-vendored=false
