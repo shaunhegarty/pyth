@@ -1,6 +1,8 @@
 """
 Render documents as XHTML fragments
 """
+import os
+
 from pyth import document
 from pyth.format import PythWriter
 
@@ -17,11 +19,11 @@ _tagNames = {
 class XHTMLWriter(PythWriter):
 
     @classmethod
-    def write(klass, document, target=None, cssClasses=True, pretty=False):
+    def write(klass, document, target=None, cssClasses=True, pretty=False, newline=os.linesep):
         if target is None:
             target = six.BytesIO()
 
-        writer = XHTMLWriter(document, target, cssClasses, pretty)
+        writer = XHTMLWriter(document, target, cssClasses, pretty, newline)
         final = writer.go()
         final.seek(0)
 
@@ -37,12 +39,12 @@ class XHTMLWriter(PythWriter):
 
         return final
 
-
-    def __init__(self, doc, target, cssClasses=True, pretty=False):
+    def __init__(self, doc, target, cssClasses=True, pretty=False, newline=os.linesep):
         self.document = doc
         self.target = target
         self.cssClasses = cssClasses
         self.pretty = pretty
+        self.newline = newline
         self.paragraphDispatch = {
             document.List: self._list,
             document.Paragraph: self._paragraph
@@ -154,7 +156,7 @@ class Tag(object):
 
         if self.tag is not None:
             target.write(('</%s>' % self.tag).encode("utf-8"))
-        
+
 
     def attrString(self):
         return " ".join(

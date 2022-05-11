@@ -6,6 +6,8 @@ Tests with empty reference output will be marked as expectedFailure.
 """
 from __future__ import absolute_import
 from __future__ import print_function
+from __future__ import unicode_literals
+
 import glob
 import os
 import os.path
@@ -14,6 +16,10 @@ import unittest
 from pyth.plugins.rtf15.reader import Rtf15Reader
 from pyth.plugins.xhtml.writer import XHTMLWriter, write_html_file
 from pyth.plugins.plaintext.writer import PlaintextWriter
+
+
+TEST_LINE_SEP = '\r\n'  # Reference Outputs use CRLF
+
 
 class TestRtfHTML(unittest.TestCase):
     pass  # will be filled dynamically now:
@@ -45,7 +51,7 @@ def gen_file_test(basename, testclass, writer="either 'html' or 'txt'"):
             write_html_file(outputfilename, the_testoutput, print_msg=False)
         elif writer == 'txt':
             with open(outputfilename, "wt") as f:
-                PlaintextWriter.write(document, f)
+                PlaintextWriter.write(document, f, newline=TEST_LINE_SEP)
 
         #--- compute test output:
         with open(outputfilename, "rb") as input:
