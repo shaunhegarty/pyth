@@ -95,6 +95,8 @@ existing reference output files in `tests/rtf-as-html` and `tests/rtf-as-html`.
 The empty or missing output files indicate where functionality is missing,
 which nicely indicates possible places to jump in if you want to help.
 
+To run tests quietly with docker and tox `docker run --rm $(docker build -q .) tox`. Tests run against python 2.7 and python 3.6 at the moment. 
+
 
 Dependencies
 ============
