@@ -3,11 +3,13 @@ unit tests of the pdf writer
 """
 from __future__ import absolute_import
 from __future__ import print_function
+from __future__ import unicode_literals
 
 import unittest
 import subprocess
 import tempfile
 import os
+import six
 
 from bs4 import BeautifulSoup
 
@@ -57,41 +59,41 @@ class TestWritePDF(unittest.TestCase):
         """
         Try a simple document with one paragraph
         """
-        doc = PythonReader.read(P[u"the text"])
+        doc = PythonReader.read(P["the text"])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
-        assert "the text" in html
+        assert six.ensure_binary("the text") in html
 
     def test_bold(self):
-        doc = PythonReader.read([P[T(BOLD)[u"bold text"]]])
+        doc = PythonReader.read([P[T(BOLD)["bold text"]]])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, features='xml')
         node = soup.find("b")
         assert node
         assert node.string == "bold text"
 
     def test_italic(self):
-        doc = PythonReader.read([P[T(ITALIC)[u"italic text"]]])
+        doc = PythonReader.read([P[T(ITALIC)["italic text"]]])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
-        soup = BeautifulSoup(html)
+        soup = BeautifulSoup(html, features='xml')
         node = soup.find("i")
         assert node
         assert node.string == "italic text"
 
     def test_latex(self):
-        doc = PythonReader.read(P[u"the-text"])
+        doc = PythonReader.read(P["the-text"])
         pdf = PDFWriter.write(doc).getvalue()
         html = self.pdf_to_html(pdf)
-        assert "the-text" in html, html
+        assert six.ensure_binary("the-text") in html, html
 
     def test_rst(self):
-        doc = PythonReader.read(P[u"the-text"])
+        doc = PythonReader.read(P["the-text"])
         pdf = PDFWriter.write(doc).getvalue()
         print(pdf)
         html = self.pdf_to_html(pdf)
-        assert "the-text" in html, html
+        assert six.ensure_binary("the-text") in html, html
 
 
 if __name__ == '__main__':

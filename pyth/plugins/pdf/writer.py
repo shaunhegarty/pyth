@@ -3,7 +3,7 @@ Render documents as Reportlab PDF stories
 """
 from __future__ import absolute_import
 
-from six import StringIO
+import six
 import cgi # For escape()
 
 from pyth import document
@@ -34,7 +34,7 @@ class PDFWriter(PythWriter):
         story = writer.go()
         
         if target is None:
-            target = StringIO()
+            target = six.BytesIO()
 
         doc = SimpleDocTemplate(target)
         doc.build(story)
