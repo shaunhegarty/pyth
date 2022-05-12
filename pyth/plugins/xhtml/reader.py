@@ -3,7 +3,7 @@ Read documents from xhtml
 """
 from __future__ import absolute_import
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 import six
 
 from pyth import document
@@ -26,9 +26,8 @@ class XHTMLReader(PythReader):
 
     def go(self):
         soup = BeautifulSoup(self.source,
-                             convertEntities=BeautifulSoup.BeautifulSoup.HTML_ENTITIES,
-                             fromEncoding=self.encoding,
-                             smartQuotesTo=None)
+                             features="xml",
+                             from_encoding=self.encoding)
         # Make sure the document content doesn't use multi-lines
         soup = self.format(soup)
         doc = document.Document()
@@ -58,12 +57,12 @@ class XHTMLReader(PythReader):
                 text = six.text_type(node)
                 lines = [x.strip() for x in text.splitlines()]
                 text = ' '.join(lines)
-                node.replaceWith(BeautifulSoup.BeautifulSoup(text))
-        soup = BeautifulSoup.BeautifulSoup(six.text_type(soup))
+                node.replaceWith(BeautifulSoup(text, features="xml"))
+        soup = BeautifulSoup(six.text_type(soup), features="xml")
         # replace all <br/> tag by newline character
         for node in soup.findAll('br'):
             node.replaceWith("\n")
-        soup = BeautifulSoup.BeautifulSoup(six.text_type(soup))
+        soup = BeautifulSoup(six.text_type(soup), features="xml")
         return soup
 
     def is_bold(self, node):
@@ -143,7 +142,7 @@ class XHTMLReader(PythReader):
         Process a BeautifulSoup node and fill its elements into a pyth
         base object.
         """
-        if isinstance(node, BeautifulSoup.NavigableString):
+        if isinstance(node, NavigableString):
             text = self.process_text(node)
             if text:
                 obj.append(text)
