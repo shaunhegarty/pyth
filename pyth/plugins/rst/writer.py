@@ -1,9 +1,9 @@
 """
 Render documents as reStructuredText.
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import six
-from six import StringIO
+from six import BytesIO
 
 from pyth import document
 from pyth.format import PythWriter
@@ -15,7 +15,7 @@ class RSTWriter(PythWriter):
     @classmethod
     def write(klass, document, target=None):
         if target is None:
-            target = StringIO()
+            target = BytesIO()
 
         writer = RSTWriter(document, target)
         return writer.go()
@@ -28,10 +28,10 @@ class RSTWriter(PythWriter):
                                   document.Paragraph: self.paragraph}
 
     def go(self):
-        for (i, paragraph) in enumerate(self.document.content):
+        for _, paragraph in enumerate(self.document.content):
             handler = self.paragraphDispatch[paragraph.__class__]
             handler(paragraph)
-            self.target.write("\n")
+            self.target.write(b"\n")
 
         # Heh heh, remove final paragraph spacing
         self.target.seek(-2, 1)
@@ -43,35 +43,35 @@ class RSTWriter(PythWriter):
         """
         process a pyth text and return the formatted string
         """
-        ret = u"".join(text.content)
+        ret = "".join(text.content)
         if 'url' in text.properties:
-            return u"`%s`_" % ret
+            return "`%s`_" % ret
         if 'bold' in text.properties:
-            return u"**%s**" % ret
+            return "**%s**" % ret
         if 'italic' in text.properties:
-            return u"*%s*" % ret
+            return "*%s*" % ret
         if 'sub' in text.properties:
-            return six.u(r"\ :sub:`%s`\ " % ret)
+            return r"\ :sub:`%s`\ " % ret
         if 'super' in text.properties:
-            return six.u(r"\ :sup:`%s`\ " % ret)
+            return r"\ :sup:`%s`\ " % ret
         return ret
 
-    def paragraph(self, paragraph, prefix=""):
+    def paragraph(self, paragraph, prefix=b""):
         """
         process a pyth paragraph into the target
         """
         content = []
         for text in paragraph.content:
             content.append(self.text(text))
-        content = u"".join(content).encode("utf-8")
+        content = "".join(content).encode("utf-8")
 
-        for line in content.split("\n"):
-            self.target.write("  " * self.indent)
+        for line in content.split(b"\n"):
+            self.target.write(b"  " * self.indent)
             self.target.write(prefix)
             self.target.write(line)
-            self.target.write("\n")
+            self.target.write(b"\n")
             if prefix:
-                prefix = "  "
+                prefix = b"  "
 
         # handle the links
         if any('url' in text.properties for text in paragraph.content):

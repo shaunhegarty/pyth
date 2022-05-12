@@ -18,8 +18,8 @@ class TestReadXHTML(unittest.TestCase):
         """
         xhtml = "<div></div>"
         doc = XHTMLReader.read(xhtml)
-        self.assert_(isinstance(doc, pyth.document.Document))
-        self.assert_(not doc.content)
+        self.assertTrue(isinstance(doc, pyth.document.Document))
+        self.assertTrue(not doc.content)
 
     def test_paragraphs(self):
         """
@@ -27,14 +27,14 @@ class TestReadXHTML(unittest.TestCase):
         """
         xhtml = "<div><p>p0</p><p>p1</p><p>p2</p></div>"
         doc = XHTMLReader.read(xhtml)
-        self.assert_(len(doc.content) == 3)
+        self.assertTrue(len(doc.content) == 3)
         for i, p in enumerate(doc.content):
-            self.assert_(isinstance(p, pyth.document.Paragraph))
-            self.assert_(len(p.content) == 1)
-            self.assert_(isinstance(p.content[0], pyth.document.Text))
+            self.assertTrue(isinstance(p, pyth.document.Paragraph))
+            self.assertTrue(len(p.content) == 1)
+            self.assertTrue(isinstance(p.content[0], pyth.document.Text))
             text = p.content[0]
-            self.assert_(len(text.content) == 1)
-            self.assert_(text.content[0] == 'p%d' % i)
+            self.assertTrue(len(text.content) == 1)
+            self.assertTrue(text.content[0] == 'p%d' % i)
 
     def test_bold(self):
         """

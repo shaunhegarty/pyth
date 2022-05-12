@@ -6,7 +6,7 @@ reStructuredText writer output.
 """
 from __future__ import absolute_import
 
-from six import StringIO
+import six
 import docutils.core
 
 from pyth import document
@@ -15,7 +15,6 @@ from pyth.plugins.rst.writer import RSTWriter
 
 
 class LatexWriter(PythWriter):
-
     @classmethod
     def write(klass, document, target=None, stylesheet=""):
         """
@@ -37,7 +36,7 @@ class LatexWriter(PythWriter):
         """
         self.document = doc
         self.stylesheet = stylesheet
-        self.target = target if target is not None else StringIO()
+        self.target = target if target is not None else six.BytesIO()
 
     @property
     def full_stylesheet(self):
@@ -57,19 +56,20 @@ class LatexWriter(PythWriter):
         }
         """ % (self.document.properties.get("title"),
                self.document.properties.get("author"),
-               self.document.properties.get("subject"))
+                self.document.properties.get("subject"),
+            )
         return latex_fragment + self.stylesheet
 
     def go(self):
         rst = RSTWriter.write(self.document).getvalue()
-        settings = dict(input_encoding="UTF-8",
-                        output_encoding="UTF-8",
-                        stylesheet="stylesheet.tex")
-        latex = docutils.core.publish_string(rst,
-                                             writer_name="latex",
-                                             settings_overrides=settings)
+        settings = dict(
+            input_encoding="UTF-8", output_encoding="UTF-8", stylesheet="stylesheet.tex"
+        )
+        latex = docutils.core.publish_string(
+            rst, writer_name="latex", settings_overrides=settings
+        )
         # We don't want to keep an \input command in the latex file
-        latex = latex.replace(r"\input{stylesheet.tex}",
-                              self.full_stylesheet)
+        # assert False, '{}, {}'.format(type(rb"\input{stylesheet.tex}"), type(six.ensure_binary(self.full_stylesheet)))
+        latex = latex.replace(six.ensure_binary(r"\input{stylesheet.tex}"), six.ensure_binary(self.full_stylesheet))
         self.target.write(latex)
         return self.target

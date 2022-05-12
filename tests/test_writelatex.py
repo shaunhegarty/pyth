@@ -1,12 +1,13 @@
 """
 unit tests of the latex writer
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 import unittest
+import six
 
 from pyth.plugins.latex.writer import LatexWriter
-from pyth.plugins.python.reader import *
+from pyth.plugins.python.reader import PythonReader, P, T, BOLD, ITALIC
 
 
 class TestWriteLatex(unittest.TestCase):
@@ -22,19 +23,19 @@ class TestWriteLatex(unittest.TestCase):
         """
         Try a single paragraph document
         """
-        doc = PythonReader.read(P[u"the text"])
+        doc = PythonReader.read(P["the text"])
         latex = LatexWriter.write(doc).getvalue()
-        assert "the text" in latex
+        assert six.ensure_binary("the text") in latex
 
     def test_bold(self):
-        doc = PythonReader.read([P[T(BOLD)[u"bold text"]]])
+        doc = PythonReader.read([P[T(BOLD)["bold text"]]])
         latex = LatexWriter.write(doc).getvalue()
-        assert r"\textbf{bold text}" in latex, latex
+        assert six.ensure_binary(r"\textbf{bold text}") in latex, latex
 
     def test_italic(self):
-        doc = PythonReader.read([P[T(ITALIC)[u"italic text"]]])
+        doc = PythonReader.read([P[T(ITALIC)["italic text"]]])
         latex = LatexWriter.write(doc).getvalue()
-        assert r"\emph{italic text}" in latex, latex
+        assert six.ensure_binary(r"\emph{italic text}") in latex, latex
 
     def test_metadata(self):
         """
@@ -46,6 +47,6 @@ class TestWriteLatex(unittest.TestCase):
         doc["title"] = "The Title"
 
         latex = LatexWriter.write(doc).getvalue()
-        assert "pdfauthor={The Author}" in latex, latex
-        assert "pdfsubject={The Subject}" in latex, latex
-        assert "pdftitle={The Title}" in latex, latex
+        assert six.ensure_binary("pdfauthor={The Author}") in latex, latex
+        assert six.ensure_binary("pdfsubject={The Subject}") in latex, latex
+        assert six.ensure_binary("pdftitle={The Title}") in latex, latex
