@@ -3,3 +3,6 @@
 *.py[co]
 *.egg-info
 tests/currentoutput/
+.devcontainer
+pyproject.toml
+poetry.lock
